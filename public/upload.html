@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+<script type="application/javascript">
+    var imageBase64="";
+    function readImage(input) {
+        if (input.files && input.files[0]) {
+            var FR = new FileReader();
+            FR.onload = function (e) {
+                var image = e.target.result;
+                image= image.split(",");
+                imageBase64= image[1];
+            };
+            FR.readAsDataURL(input.files[0]);
+        }
+    }
+    $(document).ready(function(){
+
+
+        $("#wallpaper").change(function(){
+            readImage( this );
+        });
+        $("#upload").click(function () {
+            alert("Button Clicked");
+            var title= $("#title").val();
+            var about= $("#about").val();
+            var pass= $('#password').val();
+            var link= $('#link').val();
+            var file= imageBase64;
+            var sendObject= {"password":pass,"wallpaper": {"title" :title,"about":about,"file":file,"link":link}};
+            $.post("/wallpapers",
+                    sendObject,
+                    function(data,status){
+                        alert("Data: " + data + "\nStatus: " + status);
+                    });
+        });
+    });
+
+</script>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+    <input type="text" id="title" placeholder="Title"/>
+    <input type="text" id="password" placeholder="Password"/>
+    <input type="text" id="about" placeholder="about"/>
+    <input type="text" id="link" placeholder="link for details"/>
+    <input type="file" id="wallpaper" placeholder="Image to upload">
+
+    <input type="button" id="upload" value="Upload">
+</form>
+</form>
+</body>
+</html>
